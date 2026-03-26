@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberLeon · Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0b;
+    --surface: #111110;
+    --border: #232220;
+    --text: #f0ede8;
+    --muted: #6b6860;
+    --accent: #c9a84c;
+    --accent2: #e6c76b;
+    --accent-dim: rgba(201,168,76,0.12);
+    --accent-border: rgba(201,168,76,0.25);
+    --blue: #1a56db;
+    --blue2: #3b6ef0;
+    --blue-dim: rgba(26,86,219,0.12);
+    --blue-border: rgba(26,86,219,0.25);
+    --green: #0a7a55;
+    --green2: #14a372;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── AMBIENT BACKGROUND ── */
+  .ambient {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .ambient-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(120px); opacity: 0;
+    animation: orb-float 8s ease-in-out infinite;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    animation-delay: 0s; animation-duration: 9s;
+  }
+  .orb-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(26,86,219,0.14) 0%, transparent 70%);
+    bottom: -150px; right: -100px;
+    animation-delay: 3s; animation-duration: 11s;
+  }
+  .orb-3 {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation-delay: 1.5s; animation-duration: 7s;
+  }
+  @keyframes orb-float {
+    0%   { opacity: 0; transform: scale(0.9) translateY(0px); }
+    20%  { opacity: 1; }
+    50%  { transform: scale(1.05) translateY(-30px); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(0.9) translateY(0px); }
+  }
+
+  /* grid lines */
+  .grid-lines {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-fade 2s ease forwards;
+  }
+  @keyframes grid-fade { from { opacity:0 } to { opacity:1 } }
+
+  /* particle dots */
+  .particles {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .particle {
+    position: absolute; width: 2px; height: 2px;
+    border-radius: 50%; background: var(--accent);
+    opacity: 0; animation: particle-drift linear infinite;
+  }
+  @keyframes particle-drift {
+    0%   { opacity:0; transform: translateY(0) scale(0); }
+    10%  { opacity:0.6; transform: translateY(-20px) scale(1); }
+    90%  { opacity:0.3; }
+    100% { opacity:0; transform: translateY(-120px) scale(0.5); }
+  }
+
+  /* ── WRAPPER ── */
+  .portal {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+    width: min(540px, 92vw);
+    animation: portal-enter 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    opacity: 0;
+  }
+  @keyframes portal-enter {
+    from { opacity:0; transform: translateY(40px) scale(0.96); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── LOGO AREA ── */
+  .logo-area {
+    text-align: center; margin-bottom: 3rem;
+    animation: logo-enter 1.4s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    opacity: 0;
+  }
+  @keyframes logo-enter {
+    from { opacity:0; transform: translateY(-20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .logo-emblem {
+    width: 56px; height: 56px; margin: 0 auto 1.1rem;
+    position: relative;
+  }
+  .logo-emblem svg { width: 100%; height: 100%; }
+  .logo-emblem::after {
+    content: '';
+    position: absolute; inset: -8px; border-radius: 50%;
+    border: 1px solid var(--accent-border);
+    animation: emblem-pulse 3s ease-in-out infinite;
+  }
+  @keyframes emblem-pulse {
+    0%,100% { transform: scale(1); opacity:0.6; }
+    50%     { transform: scale(1.12); opacity:0.2; }
+  }
+  .logo-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text); line-height: 1;
+  }
+  .logo-wordmark span { color: var(--accent); }
+  .logo-tagline {
+    font-size: 0.6rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: var(--muted); margin-top: 0.5rem;
+  }
+
+  /* gold rule */
+  .divider {
+    width: 100%; height: 1px; margin-bottom: 2.5rem;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+    animation: divider-enter 1.2s ease 0.4s forwards; opacity:0;
+  }
+  @keyframes divider-enter { to { opacity:1; } }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 0.58rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--muted); margin-bottom: 1.25rem;
+    width: 100%; text-align: left;
+    padding-left: 2px;
+    animation: label-enter 1s ease 0.5s forwards; opacity: 0;
+  }
+  @keyframes label-enter { to { opacity:1; } }
+
+  /* ── CARDS ── */
+  .cards {
+    display: flex; flex-direction: column;
+    gap: 0.85rem; width: 100%;
+  }
+
+  .nav-card {
+    position: relative; overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.6rem 1.75rem;
+    cursor: pointer; text-decoration: none;
+    display: flex; align-items: center; gap: 1.25rem;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
+                border-color 0.3s, box-shadow 0.3s;
+    opacity: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-card:nth-child(1) { animation: card-enter 0.8s cubic-bezier(0.16,1,0.3,1) 0.55s forwards; }
+  .nav-card:nth-child(2) { animation: card-enter 0.8s cubic-bezier(0.16,1,0.3,1) 0.75s forwards; }
+  @keyframes card-enter {
+    from { opacity:0; transform: translateX(-24px); }
+    to   { opacity:1; transform: translateX(0); }
+  }
+
+  /* card glow on hover */
+  .nav-card::before {
+    content: ''; position: absolute;
+    inset: 0; border-radius: 10px;
+    opacity: 0; transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .nav-card.gold::before {
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 65%);
+  }
+  .nav-card.blue::before {
+    background: radial-gradient(ellipse at 30% 50%, rgba(26,86,219,0.12) 0%, transparent 65%);
+  }
+  .nav-card:hover::before { opacity: 1; }
+
+  /* shine sweep */
+  .nav-card::after {
+    content: ''; position: absolute;
+    top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    transform: skewX(-20deg);
+    transition: left 0s;
+    pointer-events: none;
+  }
+  .nav-card:hover::after {
+    left: 160%; transition: left 0.55s ease;
+  }
+
+  .nav-card.gold:hover {
+    border-color: rgba(201,168,76,0.45);
+    box-shadow: 0 8px 40px rgba(201,168,76,0.15), 0 0 0 1px rgba(201,168,76,0.1);
+    transform: translateY(-3px) scale(1.008);
+  }
+  .nav-card.blue:hover {
+    border-color: rgba(26,86,219,0.45);
+    box-shadow: 0 8px 40px rgba(26,86,219,0.18), 0 0 0 1px rgba(26,86,219,0.1);
+    transform: translateY(-3px) scale(1.008);
+  }
+  .nav-card:active { transform: scale(0.98) !important; }
+
+  /* icon */
+  .card-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border-radius: 10px; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1.4rem; position: relative;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .gold .card-icon { background: var(--accent-dim); border: 1px solid var(--accent-border); }
+  .blue .card-icon { background: var(--blue-dim);   border: 1px solid var(--blue-border); }
+  .nav-card:hover .card-icon { transform: scale(1.12) rotate(-4deg); }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 600;
+    letter-spacing: 0.02em; line-height: 1.2;
+    color: var(--text); margin-bottom: 0.28rem;
+    transition: color 0.2s;
+  }
+  .gold:hover .card-title { color: var(--accent2); }
+  .blue:hover .card-title { color: #6b9af8; }
+
+  .card-desc {
+    font-size: 0.72rem; color: var(--muted);
+    font-weight: 400; letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+
+  /* badge */
+  .card-badge {
+    font-size: 0.57rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 0.22rem 0.6rem; border-radius: 4px;
+    white-space: nowrap; flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .gold .card-badge {
+    background: var(--accent-dim); color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+  .blue .card-badge {
+    background: var(--blue-dim); color: #6b9af8;
+    border: 1px solid var(--blue-border);
+  }
+  .nav-card:hover .card-badge { transform: translateX(3px); }
+
+  /* arrow */
+  .card-arrow {
+    font-size: 1rem; color: var(--muted);
+    flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), color 0.2s;
+    margin-left: 0.25rem;
+  }
+  .gold:hover .card-arrow { transform: translateX(5px); color: var(--accent); }
+  .blue:hover .card-arrow  { transform: translateX(5px); color: #6b9af8; }
+
+  /* ── FOOTER ── */
+  .portal-footer {
+    margin-top: 2rem; text-align: center;
+    font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted);
+    animation: footer-enter 1s ease 1s forwards; opacity: 0;
+  }
+  @keyframes footer-enter { to { opacity:1; } }
+  .portal-footer span { color: var(--accent); opacity: 0.7; }
+
+  /* ── RIPPLE ── */
+  .ripple {
+    position: absolute; border-radius: 50%;
+    transform: scale(0);
+    background: rgba(255,255,255,0.06);
+    animation: ripple-out 0.6s linear;
+    pointer-events: none;
+  }
+  @keyframes ripple-out {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* ── TOOLTIP line at top ── */
+  .top-line {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+    animation: top-line-enter 1.5s ease 0.2s forwards;
+    opacity: 0;
+  }
+  @keyframes top-line-enter { to { opacity:1; } }
+
+  @media (max-width: 480px) {
+    .logo-wordmark { font-size: 1.6rem; }
+    .nav-card { padding: 1.25rem 1.25rem; }
+    .card-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<!-- ambient background -->
+<div class="ambient">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+</div>
+<div class="grid-lines"></div>
+<div class="particles" id="particles"></div>
+
+<!-- PORTAL -->
+<div class="portal">
+
+  <!-- LOGO -->
+  <div class="logo-area">
+    <div class="logo-emblem">
+      <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="28,4 52,18 52,38 28,52 4,38 4,18"
+          fill="none" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+        <polygon points="28,10 46,20 46,36 28,46 10,36 10,20"
+          fill="none" stroke="#c9a84c" stroke-width="0.6" opacity="0.35"/>
+        <circle cx="28" cy="28" r="6" fill="#c9a84c" opacity="0.9"/>
+        <circle cx="28" cy="28" r="3" fill="#0c0c0b"/>
+        <line x1="28" y1="4"  x2="28" y2="22" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+        <line x1="28" y1="34" x2="28" y2="52" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+        <line x1="4"  y1="18" x2="22" y2="24" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+        <line x1="34" y1="32" x2="52" y2="38" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+        <line x1="52" y1="18" x2="34" y2="24" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+        <line x1="22" y1="32" x2="4"  y2="38" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">Cyber<span>Leon</span></div>
+    <div class="logo-tagline">Sistema de Escalas · Portal de Acesso</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Selecione o módulo</div>
+
+  <!-- CARDS -->
+  <div class="cards">
+
+    <a class="nav-card gold" href="index__5_.html" id="card1">
+      <div class="card-icon">🍽️</div>
+      <div class="card-body">
+        <div class="card-title">Escala de Almoço</div>
+        <div class="card-desc">Horários de saída e retorno da equipe · Sincronizado em tempo real</div>
+      </div>
+      <div class="card-badge">Almoço</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="nav-card blue" href="index__6_.html" id="card2">
+      <div class="card-icon">🏥</div>
+      <div class="card-body">
+        <div class="card-title">Escala Ambulatorial</div>
+        <div class="card-desc">Escala de médicos e especialidades por turno · Gestão de plantões</div>
+      </div>
+      <div class="card-badge">Ambulatório</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="portal-footer">
+    CyberLeon &nbsp;<span>✦</span>&nbsp; Escalas Internas &nbsp;<span>✦</span>&nbsp; v2.0
+  </div>
+
+</div>
+
+<script>
+  // ── PARTICLES ──
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${60 + Math.random() * 40}%;
+      animation-duration: ${4 + Math.random() * 6}s;
+      animation-delay: ${Math.random() * 8}s;
+      opacity: 0;
+      width: ${1 + Math.random()}px;
+      height: ${1 + Math.random()}px;
+      background: ${Math.random() > 0.5 ? '#c9a84c' : '#3b6ef0'};
+    `;
+    container.appendChild(p);
+  }
+
+  // ── RIPPLE on click ──
+  document.querySelectorAll('.nav-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.5;
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  // ── MAGNETIC CARD EFFECT ──
+  document.querySelectorAll('.nav-card').forEach(card => {
+    card.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width  - 0.5;
+      const y = (e.clientY - rect.top)  / rect.height - 0.5;
+      this.style.transform = `
+        translateY(-3px)
+        scale(1.008)
+        rotateY(${x * 4}deg)
+        rotateX(${-y * 3}deg)
+      `;
+    });
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+    });
+  });
+</script>
+</body>
+</html>
