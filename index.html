@@ -33,7 +33,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    agn-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
@@ -75,12 +75,12 @@
     100% { opacity: 0; transform: scale(0.9) translateY(0px); }
   }
 
-  /* grid lines */
-  .grid-lines {
+  /* grid nes */
+  .grid-nes {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image:
-      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      near-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      near-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: grid-fade 2s ease forwards;
   }
@@ -93,7 +93,7 @@
   .particle {
     position: absolute; width: 2px; height: 2px;
     border-radius: 50%; background: var(--accent);
-    opacity: 0; animation: particle-drift linear infinite;
+    opacity: 0; animation: particle-drift near infinite;
   }
   @keyframes particle-drift {
     0%   { opacity:0; transform: translateY(0) scale(0); }
@@ -106,7 +106,7 @@
   .portal {
     position: relative; z-index: 10;
     display: flex; flex-direction: column;
-    align-items: center; gap: 0;
+    agn-items: center; gap: 0;
     width: min(540px, 92vw);
     animation: portal-enter 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
     opacity: 0;
@@ -118,7 +118,7 @@
 
   /* ── LOGO AREA ── */
   .logo-area {
-    text-align: center; margin-bottom: 3rem;
+    text-agn: center; margin-bottom: 3rem;
     animation: logo-enter 1.4s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
     opacity: 0;
   }
@@ -134,7 +134,7 @@
   .logo-emblem::after {
     content: '';
     position: absolute; inset: -8px; border-radius: 50%;
-    border: 1px solid var(--accent-border);
+    border: 1px sod var(--accent-border);
     animation: emblem-pulse 3s ease-in-out infinite;
   }
   @keyframes emblem-pulse {
@@ -380,7 +380,7 @@
   <!-- CARDS -->
   <div class="cards">
 
-    <a class="nav-card gold" href="index__5_.html" id="card1">
+    <a class="nav-card gold" href="https://leoad14-22.github.io/HORARIOS-DE-ALMO-O/" id="card1">
       <div class="card-icon">🍽️</div>
       <div class="card-body">
         <div class="card-title">Escala de Almoço</div>
@@ -390,7 +390,7 @@
       <div class="card-arrow">→</div>
     </a>
 
-    <a class="nav-card blue" href="index__6_.html" id="card2">
+    <a class="nav-card blue" href="https://leoad14-22.github.io/ESCALA/" id="card2">
       <div class="card-icon">🏥</div>
       <div class="card-body">
         <div class="card-title">Escala Ambulatorial</div>
